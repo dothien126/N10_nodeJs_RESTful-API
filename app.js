@@ -9,6 +9,7 @@ require('dotenv').config();
 
 // import routes
 const userRoutes = require('./server/api/user/user.route');
+const authRoutes = require('./server/api/auth/auth.route')
 
 // import config
 const dbConfig = require('./configs/db.connect')
@@ -26,6 +27,7 @@ app.use(logger('dev'));
 
 // routes
 app.use('/users', userRoutes)
+app.use('/users', authRoutes)
 
 // catch route error 
 app.use( (req, res, next) => {

@@ -3,3 +3,6 @@ JWT_SECRET = your-secret-key
 
 # PORT server
 PORT = your-port-server
+
+# MONGO uri
+MONGO_URI = your-mongo-uri

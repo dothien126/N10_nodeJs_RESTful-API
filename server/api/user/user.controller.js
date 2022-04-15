@@ -1,31 +1,21 @@
-const User = require('./user.model');
-const { StatusCodes } = require('http-status-code');
+const { StatusCodes } = require('http-status-codes');
 const Joi = require('joi');
 const Jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../../../configs/index.js');
 
-const encodedToken = (userId) => {
-  return Jwt.sign(
-    {
-      iss: 'Admin',
-      sub: userId,
-      iat: new Date().getTime(),
-      exp: new Date().setTime(new Date().getTime() + 1),
-    },
-    JWT_SECRET
-  );
-};
+const User = require('./user.model')
+const UserService = require('./user.service');
+const UserValid = require('./user.validate')
 
-const decodedToken = () => {
-  
-}
 
 const deleteUser = async (req, res, next) => {
   try {
     const newUserDelete = req.body;
     const { userId } = req.params;
     const result = await User.findByIdAndRemove(userId, newUserDelete);
-    return res.status(StatusCodes.OK).json({ message: 'Delete successfully ... ' });
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: 'Delete successfully ... ' });
   } catch (error) {
     next(error);
   }
@@ -33,7 +23,7 @@ const deleteUser = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
-    const users = await User.find({});
+    const users = await UserService.getAllUser();
     return res.status(StatusCodes.OK).json({ users });
   } catch (error) {
     next(error);
@@ -51,64 +41,42 @@ const getUserId = async (req, res, next) => {
 };
 
 const newUser = async (req, res, next) => {
+    const {username, age, email, password, job} = req.body;
+    const isValidUser = await UserValid.validate({
+      username,
+      age,
+      password,
+      email,
+      job,
+    });
+    if (isValidUser.error) {
+      return res.json(isValidUser.error);
+    }
   try {
-    const newUer = new User(req.body);
-    await newUser.save();
-    return res.status(StatusCodes.Created).json({ user: newUser });
+    const user = await UserService.createNewUser(username, age, email, password, job);
+    return res.status(StatusCodes.CREATED).json({ user });
   } catch (error) {
-    next();
+    next(error);
   }
-};
-
-const signIn = async (req, res, next) => {};
-
-const signUp = async (req, res, next) => {
-  const { name, age, email, password, job } = req.body;
-
-  // check email
-  const foundUser = await User.findOne({ email });
-  if (foundUser)
-    return res.status(StatusCodes.Unauthorized).json({ error: 'Email is already in use ...' });
-
-  // create user sign up
-  const newUserSignUp = new User({ name, age, email, password, job });
-  newUserSignUp.save();
-
-  // encoded token
-  const token = encodedToken(newUserSignUp._id);
-
-  return res.status(StatusCodes.OK).json({ message: 'Sign up successfully ...' });
 };
 
 const updateUser = async (req, res, next) => {
+  const newUserUpdate = req.body;
+  const { userId } = req.params;
   try {
-    const newUserUpdate = req.body;
-    const { userId } = req.params;
-    const result = await User.findByIdAndUpdate(userId, newUserUpdate);
-    return res.status(StatusCodes.OK).json({ message: 'Update successfully ... ' });
+    const result = await UserService.updateUserById(userId, newUserUpdate);
+    console.log(result)
+    return res.status(StatusCodes.OK).json({ result });
   } catch (error) {
     next(error);
   }
 };
 
-const replaceUser = async (req, res, next) => {
-  try {
-    const newUserReplace = req.body;
-    const { userId } = req.params;
-    const result = await User.findByIdAndUpdate(userId, newUserReplace);
-    return res.status(StatusCodes.OK).json({ message: 'Replace successfully ... ' });
-  } catch (error) {
-    next(error);
-  }
-};
 
 module.exports = {
   deleteUser,
   getUser,
   getUserId,
   newUser,
-  signIn,
-  signUp,
   updateUser,
-  replaceUser,
 };
