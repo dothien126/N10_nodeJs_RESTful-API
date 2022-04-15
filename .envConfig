@@ -1,0 +1,5 @@
+# jwt token
+JWT_SECRET = your-secret-key
+
+# PORT server
+PORT = your-port-server
