@@ -16,12 +16,16 @@ const encodedToken = (userId) => {
   );
 };
 
+const decodedToken = () => {
+  
+}
+
 const deleteUser = async (req, res, next) => {
   try {
     const newUserDelete = req.body;
     const { userId } = req.params;
     const result = await User.findByIdAndRemove(userId, newUserDelete);
-    return res.status(200).json({ message: 'Delete successfully ... ' });
+    return res.status(StatusCodes.OK).json({ message: 'Delete successfully ... ' });
   } catch (error) {
     next(error);
   }
@@ -30,7 +34,7 @@ const deleteUser = async (req, res, next) => {
 const getUser = async (req, res, next) => {
   try {
     const users = await User.find({});
-    return res.status(200).json({ users });
+    return res.status(StatusCodes.OK).json({ users });
   } catch (error) {
     next(error);
   }
@@ -40,7 +44,7 @@ const getUserId = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const newUserId = await User.findById(userId);
-    return res.status(200).json({ user: newUserId });
+    return res.status(StatusCodes.OK).json({ user: newUserId });
   } catch (error) {
     next(error);
   }
@@ -50,7 +54,7 @@ const newUser = async (req, res, next) => {
   try {
     const newUer = new User(req.body);
     await newUser.save();
-    return res.status(201).json({ user: newUser });
+    return res.status(StatusCodes.Created).json({ user: newUser });
   } catch (error) {
     next();
   }
@@ -64,7 +68,7 @@ const signUp = async (req, res, next) => {
   // check email
   const foundUser = await User.findOne({ email });
   if (foundUser)
-    return res.status(401).json({ error: 'Email is already in use ...' });
+    return res.status(StatusCodes.Unauthorized).json({ error: 'Email is already in use ...' });
 
   // create user sign up
   const newUserSignUp = new User({ name, age, email, password, job });
@@ -73,7 +77,7 @@ const signUp = async (req, res, next) => {
   // encoded token
   const token = encodedToken(newUserSignUp._id);
 
-  return res.status(200).json({ message: 'Sign up successfully ...' });
+  return res.status(StatusCodes.OK).json({ message: 'Sign up successfully ...' });
 };
 
 const updateUser = async (req, res, next) => {
@@ -81,7 +85,7 @@ const updateUser = async (req, res, next) => {
     const newUserUpdate = req.body;
     const { userId } = req.params;
     const result = await User.findByIdAndUpdate(userId, newUserUpdate);
-    return res.status(200).json({ message: 'Update successfully ... ' });
+    return res.status(StatusCodes.OK).json({ message: 'Update successfully ... ' });
   } catch (error) {
     next(error);
   }
@@ -92,7 +96,7 @@ const replaceUser = async (req, res, next) => {
     const newUserReplace = req.body;
     const { userId } = req.params;
     const result = await User.findByIdAndUpdate(userId, newUserReplace);
-    return res.status(200).json({ message: 'Replace successfully ... ' });
+    return res.status(StatusCodes.OK).json({ message: 'Replace successfully ... ' });
   } catch (error) {
     next(error);
   }
