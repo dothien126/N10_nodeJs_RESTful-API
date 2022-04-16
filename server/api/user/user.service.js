@@ -8,7 +8,6 @@ const findUserById = id => User.findById(id);
 const findUserByUsername = username => User.findOne({ username });
 // create a new user
 const createNewUser = (username, age, email, password, job) => {
-  console.log(username, age, email, password, job)
   const newUser = new User({
     username,
     age,

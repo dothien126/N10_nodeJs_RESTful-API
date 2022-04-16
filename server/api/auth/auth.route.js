@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const AuthController = require('./auth.controller')
-
+const AuthController = require('./auth.controller');
 
 /**
  * @swagger
  * /login:
  *   post:
- *     description: Login with username and password.
+ *     summary: Login with username and password.
  *     tags:
  *      - Auth
  *     parameters:
@@ -25,28 +24,23 @@ const AuthController = require('./auth.controller')
  *       200:
  *         description: login
  */
-router.post('/login', AuthController.login)
+router.route('/login').post(AuthController.login);
 
 /**
  * @swagger
- * /register:
+ * /users/register:
  *   post:
  *     summary: Register a new user.
  *     tags:
  *       - Auth
  *     parameters:
- *       - name: username
+ *       - name: name
  *         description: Name
  *         in: formData
  *         required: true
  *         type: string
- *       - name: age
- *         description: Age.
- *         in: formData
- *         required: true
- *         type: number
- *       - name: email
- *         description: Email address.
+ *       - name: username
+ *         description: Username.
  *         in: formData
  *         required: true
  *         type: string
@@ -55,10 +49,20 @@ router.post('/login', AuthController.login)
  *         in: formData
  *         required: true
  *         type: string
+ *       - name: repeatPassword
+ *         description: Repeat pass word.
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: email
+ *         description: Email address.
+ *         in: formData
+ *         required: true
+ *         type: string
  *     responses:
  *       201:
  *         description: Register
  */
-router.post('/register', AuthController.register)
+router.route('/register').post(AuthController.register);
 
-module.exports = router
+module.exports = router;

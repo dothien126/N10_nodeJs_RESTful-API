@@ -46,6 +46,7 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   const users = await UserService.getAllUser();
   const { username, age, email, password, job } = req.body;
+  console.log(username, age, email, password, job)
   const isValidUser = await AuthValidation.registerSchema.validate({
     username,
     age,

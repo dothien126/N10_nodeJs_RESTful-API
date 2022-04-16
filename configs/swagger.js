@@ -1,17 +1,19 @@
+const {PORT} = require('./index')
+
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
       title: 'RESTful API',
       version: '1.0.0',
     },
-    servers: [
-      {
-        url: 'http://localhost:5050',
-        description: 'Development server',
-      },
-    ],
+    // servers: [
+    //   {
+    //     url: `http://localhost:${PORT}`,
+    //     environment: 'Development server',
+    //   },
+    // ],
   },
-  apis: ['app.js'],
+  apis: ['server/api/**/**.route.js'],
 };
 
-module.exports = { swaggerOptions };
+module.exports = swaggerOptions;
