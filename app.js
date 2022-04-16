@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const logger = require('morgan');
 const res = require('express/lib/response');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
 
 // config env
 require('dotenv').config();
@@ -15,7 +17,10 @@ const authRoutes = require('./server/api/auth/auth.route')
 const dbConfig = require('./configs/db.connect')
 
 // import error handler middleware
-const {errorHandler} = require('./server/helper/APIError')
+const {errorHandler} = require('./server/helper/APIError');
+const { StatusCodes } = require('http-status-codes');
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
 const app = express();
 
 // connect to mongodb
@@ -25,14 +30,16 @@ dbConfig()
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
+
 // routes
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use('/users', userRoutes)
 app.use('/users', authRoutes)
 
 // catch route error 
 app.use( (req, res, next) => {
   const err = new Error('Not Found');
-  err.status = 404;
+  err.status = StatusCodes.NOT_FOUND;
   next(err)
 });
 

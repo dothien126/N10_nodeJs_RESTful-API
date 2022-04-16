@@ -3,7 +3,7 @@ const express = require('express');
 const ls = require('local-storage');
 const { StatusCodes } = require('http-status-codes');
 const Jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
 const UserService = require('../user/user.service');
 const AuthValidation = require('./auth.validate');
@@ -11,7 +11,36 @@ const AuthValidation = require('./auth.validate');
 const { JWT_SECRET } = require('../../../configs/index');
 
 const login = async (req, res, next) => {
-
+  const users = await UserService.getAllUser();
+  const { email, password } = req.body;
+  const user = users.find(u => u.email === email);
+  // check user exist on database
+  if (!user) {
+    const err = new Error(`Username email not found`);
+    err.statusCode = StatusCodes.BAD_REQUEST;
+    return next(err);
+  }
+  // check hash password
+  const isPassword = await bcrypt.compare(password, user.password);
+  if (!isPassword) {
+    const err = new Error(`Incorrect Password`);
+    err.statusCode = StatusCodes.BAD_REQUEST;
+    return next(err);
+  }
+  // encoded token
+  const token = Jwt.sign(
+    {
+      id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '3h',
+    }
+  );
+  ls.set('token', token);
+  return res.status(StatusCodes.OK).json({message: 'Login successfully!' });
 };
 
 const register = async (req, res, next) => {
@@ -39,8 +68,14 @@ const register = async (req, res, next) => {
   }
   try {
     // create user
-    const newUser = await UserService.createNewUser(username, age, email, password, job);
-    console.log(newUser)
+    const newUser = await UserService.createNewUser(
+      username,
+      age,
+      email,
+      password,
+      job
+    );
+    console.log(newUser);
     newUser.save();
     // encoded token
     const token = Jwt.sign(
@@ -57,7 +92,7 @@ const register = async (req, res, next) => {
     ls.set('token', token);
     return res
       .status(StatusCodes.OK)
-      .json({ message: 'Registered successfully ...' });
+      .json({ message: 'Registered successfully!' });
   } catch (error) {
     next(error);
   }
