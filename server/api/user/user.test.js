@@ -42,8 +42,6 @@ describe('testing for each api', () => {
             job: testData.user.userName,
           })
             expect(response).to.have.status(400)
-            expect(response.body).to.have.property('status')
-            expect(response.body).to.have.property('message error')
             done()
         });
     });
