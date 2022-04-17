@@ -16,7 +16,7 @@ const login = async (req, res, next) => {
   const user = users.find(u => u.email === email);
   // check user exist on database
   if (!user) {
-    const err = new Error(`Username email not found`);
+    const err = new Error(`Email is not invalid`);
     err.statusCode = StatusCodes.BAD_REQUEST;
     return next(err);
   }

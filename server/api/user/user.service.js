@@ -23,13 +23,17 @@ const updateUserByUsername = (username, userUpdate) =>
 // update user by id
 const updateUserById = (id, userUpdate) =>
   User.findOneAndUpdate({ _id: id }, userUpdate);
+// delete user by id
+const deleteUserById = (id) => {
+  User.findByIdAndDelete({_id: id})
+}
 
 module.exports = {
   createNewUser,
+  deleteUserById,
   findUserById,
   findUserByUsername,
   getAllUser,
   updateUserById,
   updateUserByUsername,
-  
 };
