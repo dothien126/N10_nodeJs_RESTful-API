@@ -5,14 +5,14 @@ const AuthController = require('./auth.controller');
 
 /**
  * @swagger
- * /login:
+ * /users/login:
  *   post:
- *     summary: Login with username and password.
+ *     summary: Login with email and password.
  *     tags:
  *      - Auth
  *     parameters:
- *       - name: username
- *         description: Username.
+ *       - name: email
+ *         description: Email.
  *         in: formData
  *         required: true
  *         type: string

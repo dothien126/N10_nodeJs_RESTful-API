@@ -22,6 +22,7 @@ const login = async (req, res, next) => {
   }
   // check hash password
   const isPassword = await bcrypt.compare(password, user.password);
+  console.log(password, user.password)
   if (!isPassword) {
     const err = new Error(`Incorrect Password`);
     err.statusCode = StatusCodes.BAD_REQUEST;
@@ -30,9 +31,9 @@ const login = async (req, res, next) => {
   // encoded token
   const token = Jwt.sign(
     {
-      id: newUser._id,
-      username: newUser.username,
-      email: newUser.email,
+      id: user._id,
+      username: user.username,
+      email: user.email,
     },
     process.env.JWT_SECRET,
     {
@@ -76,7 +77,6 @@ const register = async (req, res, next) => {
       password,
       job
     );
-    console.log(newUser);
     newUser.save();
     // encoded token
     const token = Jwt.sign(

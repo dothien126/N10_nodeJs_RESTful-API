@@ -6,12 +6,12 @@ const swaggerOptions = {
       title: 'RESTful API',
       version: '1.0.0',
     },
-    // servers: [
-    //   {
-    //     url: `http://localhost:${PORT}`,
-    //     environment: 'Development server',
-    //   },
-    // ],
+    servers: [
+      {
+        url: `http://localhost:${PORT}`,
+        environment: 'Development server',
+      },
+    ],
   },
   apis: ['server/api/**/**.route.js'],
 };
