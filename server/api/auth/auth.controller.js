@@ -14,9 +14,8 @@ const {
 } = require('../../../configs/index');
 
 const login = async (req, res, next) => {
-  const users = await UserService.getAllUser();
   const { email, password } = req.body;
-  const user = users.find((u) => u.email === email);
+  const user = await UserService.findUserByEmail(email);
   // check user exist on database
   if (!user) {
     const err = new Error(`Email is not invalid`);
@@ -47,7 +46,6 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   const users = await UserService.getAllUser();
   const { username, age, email, password, job } = req.body;
-  console.log(username, age, email, password, job);
   const isValidUser = await AuthValidation.registerSchema.validate({
     username,
     age,

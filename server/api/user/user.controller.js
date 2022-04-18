@@ -23,6 +23,7 @@ const deleteUser = async (req, res, next) => {
 const getUser = async (req, res, next) => {
   try {
     const users = await UserService.getAllUser();
+    // const {password, __v , ...others} = users
     return res.status(StatusCodes.OK).json({ users });
   } catch (error) {
     next(error);
@@ -39,21 +40,6 @@ const getUserId = async (req, res, next) => {
   }
 };
 
-const newUser = async (req, res, next) => {
-  const { username, age, email, password, job } = req.body;
-  try {
-    const user = await UserService.createNewUser(
-      username,
-      age,
-      email,
-      password,
-      job
-    );
-    return res.status(StatusCodes.CREATED).json({ user });
-  } catch (error) {
-    next(error);
-  }
-};
 
 const updateUser = async (req, res, next) => {
   const newUserUpdate = req.body;
@@ -70,6 +56,5 @@ module.exports = {
   deleteUser,
   getUser,
   getUserId,
-  newUser,
   updateUser,
 };
