@@ -23,7 +23,7 @@ const login = async (req, res, next) => {
   // check hash password
   const isPassword = await bcrypt.compare(password, user.password);
   console.log(password, user.password)
-  if (!isPassword) {
+  if (isPassword) {
     const err = new Error(`Incorrect Password`);
     err.statusCode = StatusCodes.BAD_REQUEST;
     return next(err);
