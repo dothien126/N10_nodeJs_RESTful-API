@@ -3,7 +3,6 @@ const chaiHttp = require('chai-http');
 const router = require('./auth.route');
 
 const expect = chai.expect;
-const should = chai.should();
 
 const user = {
   userName: 'admin',
@@ -24,10 +23,10 @@ describe('POST /users/register', () => {
       .set('content-type', 'application/json')
       .send(user)
       .end((err, res) => {
-        expect(err).should.be.null;
-        expect(res).should.have.status(201);
-        expect(res.body).should.have.property('data');
-        expect(res.body).should.be.a('array');
+        expect(err).to.be.null;
+        expect(res).to.have.status(201);
+        expect(res.body).to.have.property('data');
+        expect(res.body).to.be.a('array');
         done();
       });
 

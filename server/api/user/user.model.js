@@ -2,10 +2,18 @@ const { required } = require('joi');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Jwt = require('jsonwebtoken');
+
+const {
+  ACCESS_JWT_SECRET,
+  REFRESH_JWT_SECRET,
+} = require('../../../configs/index');
 
 const UserSchema = new Schema({
   username: {
     type: String,
+    required: true,
+    unique: true,
   },
   age: {
     type: Number,
@@ -23,6 +31,38 @@ const UserSchema = new Schema({
     type: String,
   },
 });
+
+UserSchema.methods.createAccessToken = function () {
+  const user = this;
+  const accessToken = Jwt.sign(
+    {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+    process.env.ACCESS_JWT_SECRET,
+    {
+      expiresIn: '5m',
+    }
+  );
+  return accessToken;
+};
+
+UserSchema.methods.createRefreshToken = function () {
+  const user = this;
+  const refreshToken = Jwt.sign(
+    {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+    process.env.REFRESH_JWT_SECRET,
+    {
+      expiresIn: '7d',
+    }
+  );
+  return refreshToken;
+};
 
 UserSchema.pre('save', async function (next) {
   try {

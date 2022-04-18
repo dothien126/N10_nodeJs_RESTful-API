@@ -10,7 +10,7 @@ const deleteUser = async (req, res, next) => {
   try {
     const newUserDelete = req.body;
     const { userId } = req.params;
-    const result = await UserService.deleteUser(userId);
+    const result = await UserService.deleteUserById(userId);
     return res
       .status(StatusCodes.OK)
       .json({ message: 'Delete successfully ... ' });
@@ -31,7 +31,7 @@ const getUser = async (req, res, next) => {
 const getUserId = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const newUserId = await UserService.getUserId(userId);
+    const newUserId = await UserService.findUserById(userId);
     return res.status(StatusCodes.OK).json({ user: newUserId });
   } catch (error) {
     next(error);

@@ -1,31 +1,77 @@
 const User = require('./user.model');
 
 // get all users
-const getAllUser = () => User.find({});
+const getAllUser = async () => {
+  try {
+    const users = User.find({})
+    return users
+  } catch (error) {
+    throw error
+  }
+};
 // find user by id
-const findUserById = id => User.findById(id);
+const findUserById = async (id) => {
+  try {
+    const user = await user.findUserById(id)
+    if(!user) throw new Error('User is not invalid')
+  } catch (error) {
+    throw error
+  }
+}
 // find User by Username
-const findUserByUsername = username => User.findOne({ username });
+const findUserByUsername = async (username) => {
+  try {
+    const user = await user.findOne(username)
+    if(!user) throw new Error('User is not invalid')
+  } catch (error) {
+    throw error
+  }
+}
 // create a new user
-const createNewUser = (username, age, email, password, job) => {
-  const newUser = new User({
-    username,
-    age,
-    email,
-    password,
-    job,
-  });
-  return newUser.save()
+const createNewUser = async (username, age, email, password, job) => {
+  try {
+    const user = await new User({
+      username,
+      age,
+      email,
+      password,
+      job,
+    });
+    if(!user) throw new Error('User is node invalid')
+    return user.save()
+  } catch (error) {
+    throw error
+  }
 };
 // update user by username
-const updateUserByUsername = (username, userUpdate) =>
-  User.findOneAndUpdate({ username }, userUpdate);
+const updateUserByUsername = async (username, userUpdate) => {
+  try {
+    const user = await User.findOneAndUpdate({ username }, userUpdate);
+    if(!user) throw new Error('User is not invalid')
+    return user
+  } catch (error) {
+    throw error
+  }
+}
 // update user by id
-const updateUserById = (id, userUpdate) =>
-  User.findOneAndUpdate({ _id: id }, userUpdate);
+const updateUserById = async (id, userUpdate) => {
+  try {
+    const user = await User.findOneAndUpdate({ username }, userUpdate);
+    if(!user) throw new Error('User is not invalid')
+    return user
+  } catch (error) {
+    throw error 
+  }
+}
 // delete user by id
-const deleteUserById = (id) => {
-  User.findByIdAndDelete({_id: id})
+const deleteUserById = async (id) => {
+  try {
+    const user = await User.findByIdAndDelete({_id: id})
+    if(!user) throw new Error('User is not invalid')
+    return user
+  } catch (error) {
+    throw error
+  }
 }
 
 module.exports = {

@@ -1,11 +1,32 @@
 const Jwt = require('jsonwebtoken');
-const ls = require('local-storage');
 const { StatusCodes } = require('http-status-codes');
-const { JWT_SECRET } = require('../../../configs/index');
+const { ACCESS_JWT_SECRET, REFRESH_JWT_SECRET } = require('../../../configs/index');
+
+const decodeAccessToken = async (token) => {
+  try {
+    const decode = Jwt.verify(token, ACCESS_JWT_SECRET)
+    const user = await getOneUser({ _id: decode._id })
+    
+    return user
+  } catch (error) {
+    return null
+  }
+}
+
+const decodeRefreshToken = async (token) => {
+  try {
+    const decode = Jwt.verify(token, REFRESH_JWT_SECRET)
+    const user = await getOneUser({ _id: decode._id })
+    
+    return user
+  } catch (error) {
+    return null
+  }
+}
 
 const authMiddleware = {
-  verifyToken: (req, res, next) => {
-    const accessToken = ls.get('token');
+  verifyToken: async (req, res, next) => {
+    const accessToken = req.header('Authorization');
 
     if (!accessToken) {
       const error = new Error('Token not found');
@@ -13,8 +34,10 @@ const authMiddleware = {
       return next(error);
     }
 
+    const token = accessToken.split('')[1]
+
     try {
-      const user = Jwt.verify(accessToken, JWT_SECRET);
+      const user = await decodeAccessToken(token);
       req.user = user;
       next();
     } catch (error) {
