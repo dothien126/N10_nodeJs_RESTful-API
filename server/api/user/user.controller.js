@@ -3,13 +3,14 @@ const Joi = require('joi');
 const Jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../../../configs/index.js');
 
+const UserSchema = require('./user.validate')
 const User = require('./user.model');
 const UserService = require('./user.service');
 
 const deleteUser = async (req, res, next) => {
+  const newUserDelete = req.body;
+  const { userId } = req.params;
   try {
-    const newUserDelete = req.body;
-    const { userId } = req.params;
     const result = await UserService.deleteUserById(userId);
     return res
       .status(StatusCodes.OK)

@@ -2,21 +2,16 @@ const { StatusCodes } = require('http-status-codes');
 const Joi = require('joi');
 const { validate } = require('./user.model');
 
-//validate data user
-const validateUser = (userSchemaValidate, name) => {
+const validateParam = (schema, name) => {
   return (req, res, next) => {
-    const validateResult = userSchemaValidate.validate(req.body);
-
-    if (validateResult.error) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: validateResult.error });
+    const validateResult = schema.validate({param: req.params[name]})
+    if(validateResult.error) {
+      return res.status(StatusCodes.BAD_REQUEST),json(validateResult.error)
     } else {
-      next();
+      next()
     }
-  };
-};
-
+  }
+}
 // define user schema
 const userSchemaValidate = {
   userSchema: Joi.object().keys({
@@ -33,7 +28,27 @@ const userSchemaValidate = {
   }),
 };
 
+const idSchema = Joi.object().keys({
+  userId: Joi.string.regex(/^[0-9a-f-A-F]{24}$/).required()
+})
+//validate data user
+const validateUser = (userSchemaValidate, name) => {
+  return (req, res, next) => {
+    const validateResult = userSchemaValidate.validate(req.body);
+
+    if (validateResult.error) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: validateResult.error });
+    } else {
+      next();
+    }
+  };
+};
+
 module.exports = {
   userSchemaValidate,
+  idSchema,
   validateUser,
+  validateParam,
 };

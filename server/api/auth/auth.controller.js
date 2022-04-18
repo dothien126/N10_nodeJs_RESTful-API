@@ -125,4 +125,5 @@ const requestRefreshToken = async (req, res) => {
 module.exports = {
   login,
   register,
+  requestRefreshToken,
 };
