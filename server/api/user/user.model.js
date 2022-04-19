@@ -37,6 +37,7 @@ const UserSchema = new Schema({
   {timestamps: true}
 );
 
+// create access token
 UserSchema.methods.createAccessToken = function () {
   const user = this;
   const accessToken = Jwt.sign(
@@ -53,6 +54,7 @@ UserSchema.methods.createAccessToken = function () {
   return accessToken;
 };
 
+// create refresh token
 UserSchema.methods.createRefreshToken = function () {
   const user = this;
   const refreshToken = Jwt.sign(

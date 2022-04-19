@@ -2,8 +2,12 @@
 ACCESS_JWT_SECRET = your-secret-key
 REFRESH_JWT_SECRET = your-secret-key
 
-# PORT server
+# port server
 PORT = your-port-server
 
-# MONGO uri
+# mongo uri
 MONGO_URI = your-mongo-uri
+
+# email host
+EMAIL_HOST = your-email-host
+PASSWORD = your-password-host

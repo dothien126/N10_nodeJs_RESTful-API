@@ -4,6 +4,7 @@ const { StatusCodes } = require('http-status-codes');
 const Jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 
+const transporter = require('../../helper/mail')
 const User = require('../user/user.model');
 const UserService = require('../user/user.service');
 const AuthValidation = require('./auth.validate');
@@ -11,6 +12,7 @@ const AuthValidation = require('./auth.validate');
 const {
   ACCESS_JWT_SECRET,
   REFRESH_JWT_SECRET,
+  EMAIL_HOST,
 } = require('../../../configs/index');
 
 const login = async (req, res, next) => {
@@ -77,6 +79,17 @@ const register = async (req, res, next) => {
     );
     newUser.save();
     // encoded token
+    const accessToken = newUser.createAccessToken();
+    // nodemailer
+    const options = {
+      from: EMAIL_HOST,
+      to: newUser.email,
+      subject: 'Welcome to my channel',
+      accessToken: accessToken,
+      text: 'This is active email'
+    }
+  
+    transporter.sendMail(options)
     return res
       .status(StatusCodes.OK)
       .json({ message: 'Registered successfully!' });
@@ -102,6 +115,7 @@ const requestRefreshToken = async (req, res) => {
       .status(StatusCodes.UNAUTHORIZED)
       .json({ message: 'Token is not invalid. You are not authenticated!' });
 
+  // verify refresh token
   Jwt.verify(refreshToken, REFRESH_JWT_SECRET, (err, user) => {
     if (err) {
       const err = new Error(`Token it not invalid`);
