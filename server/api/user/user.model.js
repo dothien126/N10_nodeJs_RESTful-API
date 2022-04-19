@@ -30,7 +30,12 @@ const UserSchema = new Schema({
   job: {
     type: String,
   },
-});
+  linkImage: {
+    type: String,
+  }
+},
+  {timestamps: true}
+);
 
 UserSchema.methods.createAccessToken = function () {
   const user = this;

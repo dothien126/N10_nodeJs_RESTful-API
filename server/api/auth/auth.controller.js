@@ -32,12 +32,12 @@ const login = async (req, res, next) => {
   // encoded token
   const accessToken = user.createAccessToken();
   const refreshToken = user.createRefreshToken();
-  res.cookie("refreshToken", refreshToken, {
+  res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: false,
     path: '/',
-    sameSite: 'strict'
-  })
+    sameSite: 'strict',
+  });
   return res
     .status(StatusCodes.OK)
     .json({ message: 'Login successfully!', accessToken });
@@ -96,30 +96,31 @@ const requestRefreshToken = async (req, res) => {
     err.statusCode = StatusCodes.BAD_REQUEST;
     return next(err);
   }
-  const refreshToken = req.cookies.refreshToken
-  if(!refreshToken)
-    return res.status(StatusCodes.UNAUTHORIZED).json({message: 'Token is not invalid. You are not authenticated!'}) 
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken)
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: 'Token is not invalid. You are not authenticated!' });
 
   Jwt.verify(refreshToken, REFRESH_JWT_SECRET, (err, user) => {
-    if(err) {
+    if (err) {
       const err = new Error(`Token it not invalid`);
       err.statusCode = StatusCodes.BAD_REQUEST;
       return next(err);
-    } 
-    const newAccessToken = user.createAccessToken(user)
-    const newRefreshToken = user.createRefreshToken(user)
-    res.cookie("refreshToken", newRefreshToken, {
+    }
+    const newAccessToken = user.createAccessToken(user);
+    const newRefreshToken = user.createRefreshToken(user);
+    res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
       secure: false,
       path: '/',
-      sameSite: 'strict'
-    })
-    user.newRefreshToken = newRefreshToken
-    user.save()
-    return res.status(StatusCodes.OK).json({accessToken: newAccessToken})
-
-  })
-}
+      sameSite: 'strict',
+    });
+    user.newRefreshToken = newRefreshToken;
+    user.save();
+    return res.status(StatusCodes.OK).json({ accessToken: newAccessToken });
+  });
+};
 module.exports = {
   login,
   register,

@@ -76,6 +76,16 @@ const deleteUserById = async (id) => {
   }
 };
 
+const upPathFile = async (userId, link) => {
+  try {
+    const user = await User.findOneAndUpdate({ userId }, { linkImage: link })
+    if (!user) throw new Error('User is not invalid');
+    return user
+  } catch (error) {
+    throw error
+  }
+}
+
 module.exports = {
   createNewUser,
   deleteUserById,
@@ -84,4 +94,5 @@ module.exports = {
   getAllUser,
   updateUserById,
   updateUserByUsername,
+  upPathFile,
 };
