@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "mocha 'server/api/auth/auth.test.js' --timeout 10000"
+    "test": "mocha 'server/api/**/**.test.js' --timeout 10000"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

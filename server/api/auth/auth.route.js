@@ -3,26 +3,23 @@ const router = express.Router();
 
 const AuthController = require('./auth.controller');
 
-/**
+/** 
  * @swagger
  * /users/login:
  *   post:
- *     summary: Login with email and password.
+ *     summary: Login a new user.
  *     tags:
- *      - Auth
+ *       - Authentication
  *     parameters:
- *       - name: email
- *         description: Email.
- *         in: formData
+ *       - in: body
+ *         name: body
  *         required: true
- *         type: string
- *       - name: password
- *         description: Password.
- *         in: formData
- *         required: true
+ *         description: Login a new user with email and password
  *     responses:
- *       200:
- *         description: login
+ *       201:
+ *         description: Login successfully
+ *       400:
+ *          description: Login fail ... Please again !
  */
 router.route('/login').post(AuthController.login);
 
@@ -32,36 +29,17 @@ router.route('/login').post(AuthController.login);
  *   post:
  *     summary: Register a new user.
  *     tags:
- *       - Auth
+ *       - Authentication
  *     parameters:
- *       - name: name
- *         description: Name
- *         in: formData
+ *       - in: body
+ *         name: body
  *         required: true
- *         type: string
- *       - name: username
- *         description: Username.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: password
- *         description: Password.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: repeatPassword
- *         description: Repeat pass word.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: email
- *         description: Email address.
- *         in: formData
- *         required: true
- *         type: string
+ *         description: Register a new user with user-data
  *     responses:
  *       201:
- *         description: Register
+ *         description: Register successfully
+ *       400:
+ *          description: Register fail ... Please again !
  */
 router.route('/register').post(AuthController.register);
 

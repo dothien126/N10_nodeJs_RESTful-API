@@ -2,7 +2,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const router = require('./auth.route');
 
-const expect = chai.expect;
+const expect = chai.expect();
+const should = chai.should()
 
 const user = {
   userName: 'admin',
@@ -14,35 +15,64 @@ const user = {
 
 chai.use(chaiHttp);
 
-describe('POST /users/register', () => {
-  it('register a new user /users/register', (done) => {
+describe('POST /register', () => {
+  it('return status 200 when user register successfully', (done) => {
     // run test
     chai
       .request(router)
-      .post('/users/register')
-      .set('content-type', 'application/json')
+      .post('/register')
+      .set('content-type', 'application/x-www-form-urlencoded')
       .send(user)
       .end((err, res) => {
-        expect(err).to.be.null;
-        expect(res).to.have.status(201);
-        expect(res.body).to.have.property('data');
-        expect(res.body).to.be.a('array');
-        done();
-      });
+        if(err) return done(err);
+        expect(res).should.have.status(201);
+        expect(res.body).should.have.property('data');
+      }).timeout(10000);
+      done()
+  });
 
-    // test('return 400 error when email is already registered', async (done) => {
-    //     const response = await request(router)
-    //       .post('/users/register')
-    //       .set('content-type', 'application/json')
-    //       .send({
-    //         username: testData.user.userName,
-    //         age: testData.user.userName,
-    //         email: testData.user.userName,
-    //         password: testData.user.userName,
-    //         job: testData.user.userName,
-    //       })
-    //         expect(response).to.have.status(400)
-    //         done()
-    //     });
+  it('return status 400 when email is already registered', (done) => {
+    // run test
+    chai
+      .request(router)
+      .post('/register')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(user)
+      .end((err, res) => {
+        if(err) return done(err);
+        expect(res).should.have.status(400);
+        expect(res.body).should.have.property('message');
+      }).timeout(10000);
+      done()
+  });
+
+  it('return status 400 when data user format is incorrect', (done) => {
+    // run test
+    chai
+      .request(router)
+      .post('/register')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(user)
+      .end((err, res) => {
+        if(err) return done(err);
+        expect(res).should.have.status(400);
+        expect(res.body).should.have.property('message');
+      }).timeout(10000);
+      done()
+  });
+
+  it('return status 400 when data user format is not required', (done) => {
+    // run test
+    chai
+      .request(router)
+      .post('/register')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(user)
+      .end((err, res) => {
+        if(err) return done(err);
+        expect(res).should.have.status(400);
+        expect(res.body).should.have.property('message');
+      }).timeout(10000);
+      done()
   });
 });

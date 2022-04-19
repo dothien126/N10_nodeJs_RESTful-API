@@ -81,24 +81,24 @@ const register = async (req, res, next) => {
     // encoded token
     const accessToken = newUser.createAccessToken();
     // nodemailer
-    const options = {
-      from: EMAIL_HOST,
-      to: newUser.email,
-      subject: 'Welcome to my channel',
-      accessToken: accessToken,
-      text: 'This is active email'
-    }
+    // const options = {
+    //   from: EMAIL_HOST,
+    //   to: newUser.email,
+    //   subject: 'Welcome to my channel',
+    //   accessToken: accessToken,
+    //   text: 'This is active email'
+    // }
   
-    transporter.sendMail(options)
+    // transporter.sendMail(options)
     return res
-      .status(StatusCodes.OK)
+      .status(StatusCodes.CREATED)
       .json({ message: 'Registered successfully!' });
   } catch (error) {
     next(error);
   }
 };
 
-// Redis
+// http-only 'Redis' 
 const requestRefreshToken = async (req, res) => {
   const users = await UserService.getAllUser();
   const { email, password } = req.body;
