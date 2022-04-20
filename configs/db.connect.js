@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 
-const {MONGO_URI} = require('./index')
+const {MONGO_URI, MONGO_URI_TEST, PORT, PORT_TEST} = require('./index')
+
+const mongodbUri = process.env.NODE_ENV === 'test' ? MONGO_URI_TEST : MONGO_URI
 
 // connect to mongodb
 const connection = async () => {

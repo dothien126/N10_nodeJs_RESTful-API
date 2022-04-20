@@ -12,9 +12,9 @@ const getAllUser = async () => {
 // find user by id
 const findUserById = async (id) => {
   try {
-    const user = await User.findById(id).select('username age email job');
+    const user = await User.findById(id)
     if (!user) throw new Error('User is not invalid');
-    return user
+    return user;
   } catch (error) {
     throw error;
   }
@@ -24,7 +24,7 @@ const findUserByEmail = async (email) => {
   try {
     const user = await User.findOne({ email });
     if (!user) throw new Error('User is not invalid');
-    return user
+    return user;
   } catch (error) {
     throw error;
   }
@@ -78,13 +78,13 @@ const deleteUserById = async (id) => {
 
 const upPathFile = async (userId, link) => {
   try {
-    const user = await User.findOneAndUpdate({ userId }, { linkImage: link })
+    const user = await User.findOneAndUpdate({ userId }, { linkImage: link });
     if (!user) throw new Error('User is not invalid');
-    return user
+    return user;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
 
 module.exports = {
   createNewUser,

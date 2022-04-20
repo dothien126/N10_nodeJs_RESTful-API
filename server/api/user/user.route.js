@@ -33,4 +33,6 @@ router.patch(
   uploadSingle,
   UserController.upAvatar
 );
+
+router.patch('/changePass/:userId', AuthMiddleware.verifyToken, UserValidate.validateParam(UserValidate.idSchema, 'userId'), UserValidate.validateUser(UserValidate.userSchemaValidate.changePassSchema), UserController.changePassword)
 module.exports = router;

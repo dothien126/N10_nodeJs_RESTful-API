@@ -2,11 +2,12 @@ const { StatusCodes } = require('http-status-codes');
 const Joi = require('joi');
 const Jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../../../configs/index.js');
-const path = require('path')
+const path = require('path');
 
-const UserSchema = require('./user.validate')
+const UserSchema = require('./user.validate');
 const User = require('./user.model');
 const UserService = require('./user.service');
+const bcrypt = require('bcryptjs/dist/bcrypt');
 
 const deleteUser = async (req, res, next) => {
   const newUserDelete = req.body;
@@ -58,7 +59,6 @@ const getUserId = async (req, res, next) => {
   }
 };
 
-
 const updateUser = async (req, res, next) => {
   const newUserUpdate = req.body;
   const { userId } = req.params;
@@ -72,17 +72,49 @@ const updateUser = async (req, res, next) => {
 
 const upAvatar = async (req, res, next) => {
   try {
-    const { _id: userId } = req.params
-    const link = path.join('../../../../public/upload.image', req.file.originalname)
-    const rs = await UserService.upPathFile(userId, link)
-    return res.status(StatusCodes.OK).json({message: 'Upload avatar successfully.'})
+    const { _id: userId } = req.params;
+    const link = path.join(
+      '../../../../public/upload.image',
+      req.file.originalname
+    );
+    const rs = await UserService.upPathFile(userId, link);
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: 'Upload avatar successfully.' });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
+
+const changePassword = async (req, res, next) => {
+  const {userId} = req.params
+  const { password, newPassword, confirmPassword } = req.body;
+  if(newPassword === confirmPassword) {
+    try {
+      const user = await UserService.findUserById(userId)
+      const isPassCorrect = await bcrypt.compare(password, user.password)
+      if(isPassCorrect) {
+        const err = new Error('Password Wrong!')
+        err.statusCode = StatusCodes.BAD_REQUEST
+        return next(err)
+      } 
+  
+      // hash new password
+      const salt = await bcrypt.genSalt(10)
+      const newHashPassword = await bcrypt.hash(newPassword, salt)
+      await UserService.updateUserById(userId, {password: newHashPassword})
+      return res.status(StatusCodes.OK).json({message: 'Password has been changed.'})
+    } catch (error) {
+      next(error)
+    }
+  } else {
+    return res.status(StatusCodes.BAD_REQUEST).json({message: 'Please enter password again!'})
+  }
+};
 
 module.exports = {
   deleteUser,
+  changePassword,
   createNewUser,
   getUser,
   getUserId,
