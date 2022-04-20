@@ -22,7 +22,7 @@ const findUserById = async (id) => {
 // find User by Username
 const findUserByEmail = async (email) => {
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({email});
     if (!user) throw new Error('User is not invalid');
     return user;
   } catch (error) {

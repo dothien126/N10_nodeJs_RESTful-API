@@ -22,7 +22,7 @@ const AuthValidate = require('./auth.validate')
  *       400:
  *          description: Login fail ... Please again !
  */
-router.route('/login').post( AuthValidate.validateAuth(AuthValidate.loginSchema), AuthController.login);
+router.route('/users/login').post( AuthValidate.validateAuth(AuthValidate.loginSchema), AuthController.login);
 
 /**
  * @swagger
@@ -42,8 +42,8 @@ router.route('/login').post( AuthValidate.validateAuth(AuthValidate.loginSchema)
  *       400:
  *          description: Register fail ... Please again !
  */
-router.route('/register').post(AuthValidate.validateAuth(AuthValidate.registerSchema), AuthController.register);
+router.route('/users/register').post(AuthValidate.validateAuth(AuthValidate.registerSchema), AuthController.register);
 
-router.post('/refreshToken', AuthController.requestRefreshToken);
+router.post('/users/refreshToken', AuthController.requestRefreshToken);
 
 module.exports = router;

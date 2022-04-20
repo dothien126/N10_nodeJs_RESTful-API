@@ -63,6 +63,7 @@ const register = async (req, res, next) => {
 
   // check email
   const isUserMail = users.some((user) => user.email === email);
+  // const isUserMail = await UserService.findUserByEmail(email)
   if (isUserMail) {
     const error = new Error(`Email ${email} has already in use!`);
     error.statusCode = StatusCodes.BAD_REQUEST;
@@ -77,7 +78,7 @@ const register = async (req, res, next) => {
       password,
       job
     );
-    newUser.save();
+    await newUser.save();
     // encoded token
     const accessToken = newUser.createAccessToken();
     // nodemailer
@@ -88,7 +89,6 @@ const register = async (req, res, next) => {
     //   accessToken: accessToken,
     //   text: 'This is active email'
     // }
-  
     // transporter.sendMail(options)
     return res
       .status(StatusCodes.CREATED)

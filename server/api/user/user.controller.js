@@ -64,6 +64,7 @@ const updateUser = async (req, res, next) => {
   const { userId } = req.params;
   try {
     const result = await UserService.updateUserById(userId, newUserUpdate);
+    await result.save();
     return res.status(StatusCodes.OK).json({ result });
   } catch (error) {
     next(error);
@@ -78,6 +79,7 @@ const upAvatar = async (req, res, next) => {
       req.file.originalname
     );
     const rs = await UserService.upPathFile(userId, link);
+    await re.save();
     return res
       .status(StatusCodes.OK)
       .json({ message: 'Upload avatar successfully.' });
@@ -87,28 +89,32 @@ const upAvatar = async (req, res, next) => {
 };
 
 const changePassword = async (req, res, next) => {
-  const {userId} = req.params
+  const { userId } = req.params;
   const { password, newPassword, confirmPassword } = req.body;
-  if(newPassword === confirmPassword) {
+  if (newPassword === confirmPassword) {
     try {
-      const user = await UserService.findUserById(userId)
-      const isPassCorrect = await bcrypt.compare(password, user.password)
-      if(isPassCorrect) {
-        const err = new Error('Password Wrong!')
-        err.statusCode = StatusCodes.BAD_REQUEST
-        return next(err)
-      } 
-  
+      const user = await UserService.findUserById(userId);
+      const isPassCorrect = await bcrypt.compare(password, user.password);
+      if (isPassCorrect) {
+        const err = new Error('Password Wrong!');
+        err.statusCode = StatusCodes.BAD_REQUEST;
+        return next(err);
+      }
+
       // hash new password
-      const salt = await bcrypt.genSalt(10)
-      const newHashPassword = await bcrypt.hash(newPassword, salt)
-      await UserService.updateUserById(userId, {password: newHashPassword})
-      return res.status(StatusCodes.OK).json({message: 'Password has been changed.'})
+      const salt = await bcrypt.genSalt(10);
+      const newHashPassword = await bcrypt.hash(newPassword, salt);
+      await UserService.updateUserById(userId, { password: newHashPassword });
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'Password has been changed.' });
     } catch (error) {
-      next(error)
+      next(error);
     }
   } else {
-    return res.status(StatusCodes.BAD_REQUEST).json({message: 'Please enter password again!'})
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: 'Please enter password again!' });
   }
 };
 

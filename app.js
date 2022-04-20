@@ -32,11 +32,11 @@ app.use(logger('dev'));
 
 // routes
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
-app.use('/users', userRoutes);
-app.use('/users', authRoutes);
+app.use(userRoutes);
+app.use(authRoutes);
 
 // catch route error
-app.use('*', (req, res, next) => {
+app.use((req, res, next) => {
   const err = new Error('Not Found');
   err.status = StatusCodes.NOT_FOUND;
   next(err);

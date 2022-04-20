@@ -6,10 +6,10 @@ const UserController = require('./user.controller');
 const UserValidate = require('./user.validate');
 const AuthMiddleware = require('../auth/auth.middleware');
 
-router.route('/').get(AuthMiddleware.verifyToken, UserController.getUser);
+router.route('/users/').get(AuthMiddleware.verifyToken, UserController.getUser);
 
 router
-  .route('/:userId')
+  .route('/users/:userId')
   .delete(
     AuthMiddleware.verifyToken,
     UserValidate.validateParam(UserValidate.idSchema, 'userId'),
@@ -28,14 +28,14 @@ router
   );
 
 router.patch(
-  '/avatar/:userId',
+  '/users/avatar/:userId',
   AuthMiddleware.verifyToken,
   uploadSingle,
   UserController.upAvatar
 );
 
 router.patch(
-  '/changePass/:userId',
+  '/users/changePass/:userId',
   AuthMiddleware.verifyToken,
   UserValidate.validateParam(UserValidate.idSchema, 'userId'),
   UserValidate.validateUser(UserValidate.userSchemaValidate.changePassSchema),

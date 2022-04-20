@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const {StatusCodes} = require('http-status-codes')
 
 const validateAuth = (schema) => {
   return (req, res, next) => {
