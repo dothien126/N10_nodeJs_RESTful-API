@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "set NODE_ENV=test && mocha 'tests/server.test.js' --exit",
+    "test": " mocha 'tests/server.test.js' --exit",
     "test-watch": " nodemon --exec \"npm test\" "
   },
   "dependencies": {

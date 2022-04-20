@@ -2,9 +2,9 @@ process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const app = require('../app');
+const server = require('../app');
 
-const expect = chai.expect();
+const expect = chai.expect;
 const should = chai.should();
 
 const user = {
@@ -17,20 +17,12 @@ const user = {
 
 chai.use(chaiHttp);
 
-describe('POST users/register', () => {
-  it('return status 200 when user register successfully', (done) => {
+describe('get all user test/users', () => {
+  it('It should return list of users', done => {
     // run test
     chai
-      .request(app)
-      .post('users/register')
-      .set('content-type', 'application/x-www-form-urlencoded')
-      .send({
-        username: user.username,
-        age: user.age,
-        email: user.email,
-        password: user.password,
-        job: user.job,
-      })
+      .request(server)
+      .get('users/register/')
       .end((err, res) => {
         expect(res).should.have.status(201);
         expect(res.body).should.have.property('data');

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const AuthController = require('./auth.controller');
+const AuthValidate = require('./auth.validate')
 
 /** 
  * @swagger
@@ -21,7 +22,7 @@ const AuthController = require('./auth.controller');
  *       400:
  *          description: Login fail ... Please again !
  */
-router.route('/login').post(AuthController.login);
+router.route('/login').post( AuthValidate.validateAuth(AuthValidate.loginSchema), AuthController.login);
 
 /**
  * @swagger
@@ -41,7 +42,7 @@ router.route('/login').post(AuthController.login);
  *       400:
  *          description: Register fail ... Please again !
  */
-router.route('/register').post(AuthController.register);
+router.route('/register').post(AuthValidate.validateAuth(AuthValidate.registerSchema), AuthController.register);
 
 router.post('/refreshToken', AuthController.requestRefreshToken);
 

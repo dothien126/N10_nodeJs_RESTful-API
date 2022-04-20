@@ -34,5 +34,14 @@ router.patch(
   UserController.upAvatar
 );
 
-router.patch('/changePass/:userId', AuthMiddleware.verifyToken, UserValidate.validateParam(UserValidate.idSchema, 'userId'), UserValidate.validateUser(UserValidate.userSchemaValidate.changePassSchema), UserController.changePassword)
+router.patch(
+  '/changePass/:userId',
+  AuthMiddleware.verifyToken,
+  UserValidate.validateParam(UserValidate.idSchema, 'userId'),
+  UserValidate.validateUser(UserValidate.userSchemaValidate.changePassSchema),
+  UserController.changePassword
+);
+
+router.get('/test', UserController.getUser)
+router.post('/test', UserController.createNewUser)
 module.exports = router;
