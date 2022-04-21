@@ -26,7 +26,7 @@ const login = async (req, res, next) => {
   }
   // check hash password
   const isPassword = await bcrypt.compare(password, user.password);
-  if (isPassword) {
+  if (!isPassword) {
     const err = new Error(`Incorrect Password`);
     err.statusCode = StatusCodes.BAD_REQUEST;
     return next(err);
@@ -64,7 +64,7 @@ const register = async (req, res, next) => {
   // check email
   const isUserMail = users.some((user) => user.email === email);
   // const isUserMail = await UserService.findUserByEmail(email)
-  if (isUserMail) {
+  if (!isUserMail) {
     const error = new Error(`Email ${email} has already in use!`);
     error.statusCode = StatusCodes.BAD_REQUEST;
     return next(error);
@@ -98,7 +98,7 @@ const register = async (req, res, next) => {
   }
 };
 
-// http-only 'Redis' 
+// save token in http-only 'Redis' 
 const requestRefreshToken = async (req, res) => {
   const users = await UserService.getAllUser();
   const { email, password } = req.body;

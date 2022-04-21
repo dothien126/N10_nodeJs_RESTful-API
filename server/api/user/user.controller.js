@@ -94,8 +94,9 @@ const changePassword = async (req, res, next) => {
   if (newPassword === confirmPassword) {
     try {
       const user = await UserService.findUserById(userId);
+      console.log(user);
       const isPassCorrect = await bcrypt.compare(password, user.password);
-      if (isPassCorrect) {
+      if (!isPassCorrect) {
         const err = new Error('Password Wrong!');
         err.statusCode = StatusCodes.BAD_REQUEST;
         return next(err);
@@ -117,6 +118,7 @@ const changePassword = async (req, res, next) => {
       .json({ message: 'Please enter password again!' });
   }
 };
+
 
 module.exports = {
   deleteUser,

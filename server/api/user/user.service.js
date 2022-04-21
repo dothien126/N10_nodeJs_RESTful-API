@@ -1,34 +1,26 @@
+const { get } = require('superagent');
 const User = require('./user.model');
 
 // get all users
 const getAllUser = async () => {
   try {
-    const users = User.find({}).select(' username age email job');
+    const users = User.find({}).select(' username age email job ');
     return users;
   } catch (error) {
     throw error;
   }
 };
+
 // find user by id
 const findUserById = async (id) => {
-  try {
-    const user = await User.findById(id)
-    if (!user) throw new Error('User is not invalid');
-    return user;
-  } catch (error) {
-    throw error;
-  }
+  return User.findById(id)
 };
+
 // find User by Username
 const findUserByEmail = async (email) => {
-  try {
-    const user = await User.findOne({email});
-    if (!user) throw new Error('User is not invalid');
-    return user;
-  } catch (error) {
-    throw error;
-  }
+  return User.findOne({email})
 };
+
 // create a new user
 const createNewUser = async (username, age, email, password, job) => {
   try {
@@ -55,6 +47,7 @@ const updateUserByUsername = async (username, userUpdate) => {
     throw error;
   }
 };
+
 // update user by id
 const updateUserById = async (id, userUpdate) => {
   try {
@@ -65,11 +58,13 @@ const updateUserById = async (id, userUpdate) => {
     throw error;
   }
 };
+
 // delete user by id
-const deleteUserById = async (id) => {
+const deleteUserById = async (userId) => {
   try {
-    const user = await User.findByIdAndDelete({ _id: id });
+    const user = await findUserById(userId);
     if (!user) throw new Error('User is not invalid');
+    await user.remove()
     return user;
   } catch (error) {
     throw error;

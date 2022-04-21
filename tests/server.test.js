@@ -7,6 +7,7 @@ chai.use(chaiHttp);
 
 describe('Purpose for testing API', () => {
   describe('POST /users/register ', () => {
+    
     it('return status 201 when user register successful', (done) => {
       chai
         .request(server)
@@ -74,5 +75,6 @@ describe('Purpose for testing API', () => {
           done();
         });
     });
+
   });
 });
